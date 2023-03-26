@@ -118,6 +118,44 @@ app.post("/api/login", (req, res) => {
   });
 });
 
+app.get("/api/products/:category", (req, res) => {
+  let { category } = req.params;
+  const validCategories = {
+    "pain-relief": "Pain relief",
+    "allergy-relief": "Allergy relief",
+    cholesterol: "Cholesterol management",
+    diabetes: "Diabetes management",
+    "blood-pressure": "Blood pressure management",
+    antibiotics: "Antibiotics",
+    "acid-reflux": "Acid reflux management",
+    "cold-and-flu": "Cold and flu relief",
+    digestive: "Digestive health",
+  };
+  console.log("[GET] /api/products/" + category);
+  const categoryName = validCategories[category];
+
+  if (validCategories[category]) {
+    const query = `SELECT * FROM medicine WHERE m_category='${categoryName}'`;
+
+    dbConn.query(query, (error, queryResult) => {
+      if (error) {
+        throw error;
+      } else {
+        res.send({
+          success: true,
+          message: "Successfully fetched products",
+          products: queryResult,
+        });
+      }
+    });
+  } else {
+    res.send({
+      success: false,
+      message: "Invalid category",
+    });
+  }
+});
+
 app.listen(PORT, () => {
   console.log("[+] Server running on port", PORT);
 });

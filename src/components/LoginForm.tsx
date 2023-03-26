@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { sleep } from "../utils/utils";
+import { toastError, toastSuccess } from "../utils/misc";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -38,32 +39,6 @@ const LoginForm = () => {
     } catch (error: any) {
       toastError(error.message);
     }
-  };
-
-  const toastSuccess = (message: string) => {
-    toast.success(message, {
-      position: toast.POSITION.BOTTOM_RIGHT,
-      autoClose: 5000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: false,
-      progress: undefined,
-      theme: "light",
-    });
-  };
-
-  const toastError = (error: string) => {
-    toast.error(error, {
-      position: toast.POSITION.BOTTOM_RIGHT,
-      autoClose: 5000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: false,
-      progress: undefined,
-      theme: "light",
-    });
   };
 
   return (
