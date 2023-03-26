@@ -290,6 +290,8 @@ app.get("/api/trigger/1", (req, res) => {
         UPDATE medicine
         SET m_stock = m_stock - NEW.m_quantity
         WHERE m_id = NEW.m_id;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Medicine stock updated successfully';
+
     END`;
 
   dbConn.query(query, (error, queryResult) => {
@@ -344,6 +346,47 @@ app.get("/api/trigger/2", (req, res) => {
         success: true,
         message:
           "Created trigger 2 which checks the stock of a medicine before inserting an order",
+      });
+    }
+  });
+});
+
+/* Example request: localhost:2003/api/order?order_id=1000&medicine_id=240&medicine_quantity=10000
+
+*/
+app.get("/api/order", (req, res) => {
+  console.log("[GET] /api/order with data");
+
+  const orderId = parseInt(req.query.order_id);
+  const medicineId = parseInt(req.query.medicine_id);
+  const medicineQuantity = parseInt(req.query.medicine_quantity);
+
+  const query = `insert into ordered_medicines (o_id, m_id, m_quantity) values (${orderId}, ${medicineId}, ${medicineQuantity})`;
+
+  dbConn.query(query, (error, queryResult) => {
+    if (error) {
+      if (error.sqlState == "45000") {
+        res.send({
+          success: false,
+          message: error.message,
+          queryData: {
+            orderId,
+            medicineId,
+            medicineQuantity,
+          },
+        });
+      } else {
+        throw error;
+      }
+    } else {
+      res.send({
+        success: true,
+        message: "Created requested order",
+        queryData: {
+          orderId,
+          medicineId,
+          medicineQuantity,
+        },
       });
     }
   });
