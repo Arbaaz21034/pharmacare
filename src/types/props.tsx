@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-interface */
 import type { ButtonHTMLAttributes } from "react";
 
 export type HeaderSectionProps = {
@@ -80,6 +81,11 @@ export type CardWithImageAndButtonProps = {
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size: "xl" | "lg" | "md" | "sm" | "xs";
   variant: "default" | "outline";
+}
+
+export interface ButtonProps2 extends ButtonHTMLAttributes<HTMLButtonElement> {
+  view: number;
+  bid: number;
 }
 
 export type FeatureItemProps = {

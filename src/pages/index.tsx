@@ -4,7 +4,7 @@ import LoginForm from "../components/LoginForm";
 const Home: NextPage = () => {
   return (
     <>
-      <main className="flex min-h-screen items-center justify-center">
+      <main className="bg-1 flex min-h-screen items-center justify-center">
         <LoginForm />
       </main>
     </>
