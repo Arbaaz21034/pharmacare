@@ -1,6 +1,7 @@
 const express = require("express");
 const mysql = require("mysql2");
 
+const PORT = process.env.PORT || 2003;
 const app = express(2003);
 
 myDatabase = {
@@ -24,16 +25,14 @@ dbConn.connect((error) => {
 app.get("/api/users", (req, res) => {
   console.log("[GET] /api/users");
   const query = "SELECT * FROM user";
-  dbConn.query(query, (error, results, fields) => {
+  dbConn.query(query, (error, results) => {
     if (error) {
       throw error;
     }
-    console.log(results);
+
     res.send(results);
   });
 });
-
-const PORT = process.env.PORT || 2003;
 
 app.listen(PORT, () => {
   console.log("[+] Server running on port", PORT);
