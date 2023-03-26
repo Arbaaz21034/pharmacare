@@ -30,11 +30,11 @@ dbConn.connect((error) => {
 app.get("/api/users", (req, res) => {
   console.log("[GET] /api/users");
   const query = "SELECT * FROM user";
-  dbConn.query(query, (error, data) => {
+  dbConn.query(query, (error, queryResult) => {
     if (error) {
       throw error;
     }
-    res.send(data);
+    res.send(queryResult);
   });
 });
 
@@ -43,32 +43,76 @@ app.post("/api/login", (req, res) => {
   console.log("[POST] /api/login");
   const { email, password } = req.body;
 
-  const query = "SELECT * FROM user";
-  dbConn.query(query, (error, data, field) => {
+  const query = `SELECT * FROM user`;
+
+  dbConn.query(query, (error, queryResult) => {
     if (error) {
       throw error;
     }
 
-    const user = data.find((user) => user.u_email == email);
+    const user = queryResult.find((user) => user.u_email == email);
 
     if (user) {
+      const userId = user.u_id;
       if (user.u_password == password) {
-        // user exists and has given the correct password
         console.log(`[+] User ${user.u_id} logged in`);
-        res.send({
-          success: true,
-          message: "Successfully logged in",
+        const doctorQuery = `SELECT * FROM doctor WHERE d_id = ${userId}`;
+
+        dbConn.query(doctorQuery, (error, doctorQueryResult) => {
+          if (error) {
+            throw error;
+          } else if (doctorQueryResult.length === 1) {
+            console.log("[!] Doctor login");
+            res.send({
+              success: true,
+              message: "Successfully logged in as Doctor",
+              loginAs: "doctor",
+            });
+          } else {
+            const customerQuery = `SELECT * FROM customer WHERE c_id = ${userId}`;
+            dbConn.query(customerQuery, (error, customerQueryResult) => {
+              if (error) {
+                throw error;
+              } else if (customerQueryResult.length === 1) {
+                // user is a customer
+                res.send({
+                  success: true,
+                  message: "Successfully logged in as Customer",
+                  loginAs: "customer",
+                });
+              } else {
+                // user is neither admin nor customer. huh?
+              }
+            });
+          }
         });
       } else {
         res.send({
           success: false,
-          message: "Incorrect password",
+          message: "Invalid credentials",
         });
       }
     } else {
-      res.send({
-        success: false,
-        message: "This user does not exist",
+      const adminQuery = `SELECT * FROM admin`;
+      dbConn.query(adminQuery, (error, adminQueryResult) => {
+        if (error) {
+          throw error;
+        }
+
+        const admin = adminQueryResult.find((admin) => admin.a_email == email);
+        if (admin) {
+          console.log("[!] Admin login");
+          res.send({
+            success: true,
+            message: "Successfully logged in as Admin",
+            loginAs: "admin",
+          });
+        } else {
+          res.send({
+            success: false,
+            message: "Invalid credentials",
+          });
+        }
       });
     }
   });

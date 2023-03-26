@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { sleep } from "../utils/utils";
 
 const LoginForm = () => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -21,7 +24,16 @@ const LoginForm = () => {
       if (!data.success) {
         toastError(data.message);
       } else if (data.success) {
-        toastSuccess("Successfully logged in");
+        toastSuccess(data.message);
+        sleep(2000).then(() => {
+          if (data.loginAs == "admin") {
+            router.push("/admin");
+          } else if (data.loginAs == "doctor") {
+            router.push("/doctor");
+          } else {
+            router.push("/customer");
+          }
+        });
       }
     } catch (error: any) {
       toastError(error.message);
