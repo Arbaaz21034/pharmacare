@@ -19,7 +19,7 @@ const Product = (props: any) => {
           </p>
           <div className="mt-6 flex items-center">
             <p className="mr-2 text-lg font-semibold text-gray-900 dark:text-zinc-200">
-              {product.m_price} INR
+              ₹ {product.m_price}
             </p>
           </div>
         </div>
