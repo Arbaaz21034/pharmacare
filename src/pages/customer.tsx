@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Select from "react-select";
 import Button from "../components/Button";
-import { ToastContainer } from "react-toastify";
-import { toastError } from "../utils/misc";
+import { ToastContainer, toast } from "react-toastify";
+import { toastError, toastSuccess } from "../utils/misc";
 
 const Customer = () => {
   const [products, setProducts] = useState([]);
@@ -26,7 +26,10 @@ const Customer = () => {
     e.preventDefault();
     fetch("http://localhost:2003/api/products/" + selectValue)
       .then((res) => res.json())
-      .then((data) => setProducts(data.products))
+      .then((data) => {
+        setProducts(data.products);
+        //toastSuccess("Fetched the requested products");
+      })
       .catch((error) => toastError(error));
   };
 
@@ -36,7 +39,7 @@ const Customer = () => {
 
   return (
     <>
-      <div className="mx-8 mt-20 flex items-center justify-center">
+      <div className="mx-8 mt-20 flex w-full flex-col items-center justify-center">
         <div className="flex w-100 flex-row items-center justify-center gap-x-8">
           <Select options={selectOptions} onChange={handleSelect} />
           <Button variant="default" size="md" onClick={(e) => fetchProducts(e)}>
