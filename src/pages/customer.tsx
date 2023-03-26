@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import Select from "react-select";
 import Button from "../components/Button";
 import { ToastContainer, toast } from "react-toastify";
-import { toastError, toastSuccess } from "../utils/misc";
+import {
+  medicineImages,
+  randint,
+  toastError,
+  toastSuccess,
+} from "../utils/misc";
+import Product from "../components/Product";
 
 const Customer = () => {
   const [products, setProducts] = useState([]);
@@ -27,10 +33,17 @@ const Customer = () => {
     fetch("http://localhost:2003/api/products/" + selectValue)
       .then((res) => res.json())
       .then((data) => {
-        setProducts(data.products);
+        const mutatedData = data.products;
+        mutatedData.forEach((prod: any) => {
+          prod["image"] = medicineImages[randint(0, medicineImages.length - 1)];
+        });
+
+        setProducts(mutatedData);
         //toastSuccess("Fetched the requested products");
       })
-      .catch((error) => toastError(error));
+      .catch((error) => {
+        //toastError(error);
+      });
   };
 
   function handleSelect(selectedOption: any) {
@@ -47,12 +60,12 @@ const Customer = () => {
           </Button>
         </div>
 
-        <div className="mt-80 grid grid-cols-2">
+        <div className="mt-40 grid grid-cols-2 gap-x-16 gap-y-8">
           {products &&
             products.map((prod: any) => {
               return (
                 <>
-                  <div>{prod.m_name}</div>
+                  <Product product={prod} />
                 </>
               );
             })}
