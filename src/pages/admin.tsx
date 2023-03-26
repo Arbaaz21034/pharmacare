@@ -16,6 +16,56 @@ const Admin = () => {
 
   const showData = () => {
     if (viewReport == 1 && data != null && data != undefined) {
+      if (data[0]?.month) {
+        return (
+          <div className="flex w-200 items-center justify-center">
+            <div className="grid w-full grid-cols-3 gap-x-6 gap-y-10">
+              {data.map((m) => {
+                return (
+                  <div
+                    key={uuidv4()}
+                    className="flex flex-col items-center rounded-2xl bg-neutral-700 px-4 py-10 shadow-xl transition-all delay-100 duration-300 ease-in hover:scale-105"
+                  >
+                    <h2 className="text-md text-gray-300">
+                      {m.month ? m.month : "Total revenue"}
+                    </h2>
+                    <p className="pt-8 text-3xl font-semibold text-gray-200">
+                      ₹ {m.revenue}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      }
+    } else if (viewReport == 2 && data != null && data != undefined) {
+      if (data[0]?.m_category) {
+        return (
+          <div className="flex w-200 items-center justify-center">
+            <div className="grid w-full grid-cols-3 gap-x-6 gap-y-10">
+              {data.map((m) => {
+                return (
+                  <div
+                    key={uuidv4()}
+                    className="flex flex-col items-center rounded-2xl bg-neutral-700 px-4 py-10 shadow-xl transition-all delay-100 duration-300 ease-in hover:scale-105"
+                  >
+                    <h2 className="text-md text-gray-300">
+                      {m.month ? m.month : "Total revenue"}
+                    </h2>
+                    <p className="pt-6 text-center text-lg text-gray-200">
+                      {m.m_category}
+                    </p>
+                    <p className="pt-8 text-3xl font-semibold text-gray-200">
+                      ₹ {m.revenue}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      }
     } else if (viewReport == 3 && data != null && data != undefined) {
       if (data[0]?.revenue) {
         return (
@@ -75,7 +125,7 @@ const Admin = () => {
 
   return (
     <>
-      <div className="mx-8 mt-32 flex w-full flex-col items-center justify-center">
+      <div className="mx-8 my-32 flex w-full flex-col items-center justify-center">
         <div className="min-w-100 flex flex-row items-center justify-center gap-x-10">
           <ButtonAlt onClick={() => report(1)} view={viewReport} bid={1}>
             Report 1
