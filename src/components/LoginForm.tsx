@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
   const login = async (e: any) => {
     e.preventDefault();
@@ -18,11 +19,39 @@ const LoginForm = () => {
       const data = await response.json();
 
       if (!data.success) {
-        setError(data.message);
+        toastError(data.message);
+      } else if (data.success) {
+        toastSuccess("Successfully logged in");
       }
     } catch (error: any) {
-      console.log(error);
+      toastError(error.message);
     }
+  };
+
+  const toastSuccess = (message: string) => {
+    toast.success(message, {
+      position: toast.POSITION.BOTTOM_RIGHT,
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: false,
+      progress: undefined,
+      theme: "light",
+    });
+  };
+
+  const toastError = (error: string) => {
+    toast.error(error, {
+      position: toast.POSITION.BOTTOM_RIGHT,
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: false,
+      progress: undefined,
+      theme: "light",
+    });
   };
 
   return (
@@ -55,6 +84,18 @@ const LoginForm = () => {
             Sign in
           </button>
         </div>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable={false}
+          pauseOnHover
+          theme="light"
+        />
       </div>
     </>
   );
