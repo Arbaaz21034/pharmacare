@@ -1,4 +1,4 @@
-const RadixSelect = () => {
+const Select = () => {
   return (
     <>
       <div></div>
@@ -6,4 +6,4 @@ const RadixSelect = () => {
   );
 };
 
-export default RadixSelect;
+export default Select;
