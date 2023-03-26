@@ -312,6 +312,43 @@ app.get("/api/trigger/1", (req, res) => {
   });
 });
 
+/*
+TRIGGER QUERY 2
+Trigger to check the stock of a medicine before inserting an order
+*/
+app.get("/api/trigger/2", (req, res) => {
+  console.log("[GET] /api/trigger/2");
+  const query = `CREATE TRIGGER check_medicine_stock
+    BEFORE INSERT ON ordered_medicines
+    FOR EACH ROW
+    BEGIN
+        DECLARE current_stock INTEGER;
+        SELECT m_stock INTO current_stock FROM medicine WHERE m_id = NEW.m_id;
+        IF current_stock < NEW.m_quantity THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Not enough stock for this medicine';
+        END IF;
+    END`;
+
+  dbConn.query(query, (error, queryResult) => {
+    if (error) {
+      if (error.code == "ER_TRG_ALREADY_EXISTS") {
+        res.send({
+          success: false,
+          message: "Trigger 2 already exists",
+        });
+      } else {
+        throw error;
+      }
+    } else {
+      res.send({
+        success: true,
+        message:
+          "Created trigger 2 which checks the stock of a medicine before inserting an order",
+      });
+    }
+  });
+});
+
 app.listen(PORT, () => {
   console.log("[+] Server running on port", PORT);
 });
