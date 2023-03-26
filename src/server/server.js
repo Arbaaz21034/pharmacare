@@ -277,6 +277,41 @@ app.get("/api/report/4", (req, res) => {
   });
 });
 
+/*
+TRIGGER QUERY 1
+Trigger to update the stock of a medicine after a new order is placed
+*/
+app.get("/api/trigger/1", (req, res) => {
+  console.log("[GET] /api/trigger/1");
+  const query = `CREATE TRIGGER update_medicine_stock
+    AFTER INSERT ON ordered_medicines
+    FOR EACH ROW
+    BEGIN
+        UPDATE medicine
+        SET m_stock = m_stock - NEW.m_quantity
+        WHERE m_id = NEW.m_id;
+    END`;
+
+  dbConn.query(query, (error, queryResult) => {
+    if (error) {
+      if (error.code == "ER_TRG_ALREADY_EXISTS") {
+        res.send({
+          success: false,
+          message: "Trigger 1 already exists",
+        });
+      } else {
+        throw error;
+      }
+    } else {
+      res.send({
+        success: true,
+        message:
+          "Created trigger 1 which updates the stock of a medicine after a new order is placed",
+      });
+    }
+  });
+});
+
 app.listen(PORT, () => {
   console.log("[+] Server running on port", PORT);
 });
