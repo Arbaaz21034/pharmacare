@@ -11,66 +11,38 @@ const Admin = () => {
     const response = await fetch("http://localhost:2003/api/report/" + id);
     const fetchData = await response.json();
     console.log(fetchData);
+    setData(fetchData.data);
   };
 
   const showData = () => {
-    if (viewReport == 1 && data != null) {
-      const margin = { top: 20, right: 20, bottom: 30, left: 50 };
-      const width = 960 - margin.left - margin.right;
-      const height = 500 - margin.top - margin.bottom;
-
-      // Set the scales
-      const x = d3.scaleBand().range([0, width]).padding(0.1);
-      const y = d3.scaleLinear().range([height, 0]);
-
-      // Create the canvas
-      const svg = d3
-        .select("body")
-        .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-      // Set the data for the chart
-      x.domain(
-        data.map(function (d) {
-          return d.month;
-        })
+    if (viewReport == 1 && data != null && data != undefined) {
+    } else if (viewReport == 3 && data != null && data != undefined) {
+      if (data[0].revenue) {
+      }
+      return (
+        <div className="flex w-200 items-center justify-center">
+          <div className="grid w-full grid-cols-3 gap-x-6">
+            <div className="flex flex-col items-center rounded-2xl bg-neutral-700 px-4 py-10 shadow-xl">
+              <h2 className="text-lg text-gray-300">Normal Revenue</h2>
+              <p className="pt-8 text-2xl font-semibold text-gray-200">
+                INR {data[0].revenue}
+              </p>
+            </div>
+            <div className="flex flex-col items-center rounded-2xl bg-neutral-700 px-4 py-10 shadow-xl">
+              <h2 className="text-lg text-gray-300">VIP Revenue</h2>
+              <p className="pt-8 text-2xl font-semibold text-gray-200">
+                INR {data[1].revenue}
+              </p>
+            </div>
+            <div className="flex flex-col items-center rounded-2xl bg-neutral-700 px-4 py-10 shadow-xl">
+              <h2 className="text-lg text-gray-300">Total Revenue</h2>
+              <p className="pt-8 text-2xl font-semibold text-gray-200">
+                INR {data[2].revenue}
+              </p>
+            </div>
+          </div>
+        </div>
       );
-      y.domain([
-        0,
-        d3.max(data, function (d) {
-          return d.revenue;
-        }),
-      ]);
-
-      // Add the x-axis
-      svg
-        .append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
-
-      // Add the y-axis
-      svg.append("g").call(d3.axisLeft(y));
-
-      // Add the bars
-      svg
-        .selectAll(".bar")
-        .data(data)
-        .enter()
-        .append("rect")
-        .attr("class", "bar")
-        .attr("x", function (d): any {
-          return x(d.month);
-        })
-        .attr("width", x.bandwidth())
-        .attr("y", function (d) {
-          return y(d.revenue);
-        })
-        .attr("height", function (d) {
-          return height - y(d.revenue);
-        });
     }
   };
 
