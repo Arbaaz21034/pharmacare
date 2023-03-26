@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ButtonAlt from "../components/ButtonAlt";
-import * as d3 from "d3";
+import { v4 as uuidv4 } from "uuid";
 
 const Admin = () => {
   const [viewReport, setViewReport] = useState(0);
@@ -17,32 +17,59 @@ const Admin = () => {
   const showData = () => {
     if (viewReport == 1 && data != null && data != undefined) {
     } else if (viewReport == 3 && data != null && data != undefined) {
-      if (data[0].revenue) {
-      }
-      return (
-        <div className="flex w-200 items-center justify-center">
-          <div className="grid w-full grid-cols-3 gap-x-6">
-            <div className="flex flex-col items-center rounded-2xl bg-neutral-700 px-4 py-10 shadow-xl">
-              <h2 className="text-lg text-gray-300">Normal Revenue</h2>
-              <p className="pt-8 text-2xl font-semibold text-gray-200">
-                INR {data[0].revenue}
-              </p>
-            </div>
-            <div className="flex flex-col items-center rounded-2xl bg-neutral-700 px-4 py-10 shadow-xl">
-              <h2 className="text-lg text-gray-300">VIP Revenue</h2>
-              <p className="pt-8 text-2xl font-semibold text-gray-200">
-                INR {data[1].revenue}
-              </p>
-            </div>
-            <div className="flex flex-col items-center rounded-2xl bg-neutral-700 px-4 py-10 shadow-xl">
-              <h2 className="text-lg text-gray-300">Total Revenue</h2>
-              <p className="pt-8 text-2xl font-semibold text-gray-200">
-                INR {data[2].revenue}
-              </p>
+      if (data[0]?.revenue) {
+        return (
+          <div className="flex w-200 items-center justify-center">
+            <div className="grid w-full grid-cols-3 gap-x-6">
+              <div className="flex flex-col items-center rounded-2xl bg-neutral-700 px-4 py-10 shadow-xl">
+                <h2 className="text-lg text-gray-300">Normal Revenue</h2>
+                <p className="pt-8 text-2xl font-semibold text-gray-200">
+                  ₹ {data[0].revenue}
+                </p>
+              </div>
+              <div className="flex flex-col items-center rounded-2xl bg-neutral-700 px-4 py-10 shadow-xl">
+                <h2 className="text-lg text-gray-300">VIP Revenue</h2>
+                <p className="pt-8 text-2xl font-semibold text-gray-200">
+                  ₹ {data[1].revenue}
+                </p>
+              </div>
+              <div className="flex flex-col items-center rounded-2xl bg-neutral-700 px-4 py-10 shadow-xl">
+                <h2 className="text-lg text-gray-300">Total Revenue</h2>
+                <p className="pt-8 text-2xl font-semibold text-gray-200">
+                  ₹ {data[2].revenue}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      );
+        );
+      }
+    } else if (viewReport == 4 && data != null && data != undefined) {
+      if (data[0]?.c_id) {
+        return (
+          <div className="flex w-200 items-center justify-center">
+            <div className="grid w-full grid-cols-3 gap-x-6 gap-y-10">
+              {data.map((c) => {
+                return (
+                  <div
+                    key={uuidv4()}
+                    className="flex flex-col items-center rounded-2xl bg-neutral-700 px-4 py-10 shadow-xl"
+                  >
+                    <h2 className="text-lg text-gray-300">
+                      {c.month ? c.month : "Total revenue"}
+                    </h2>
+                    <p className="pt-6 text-sm text-slate-300">
+                      Customer {c.c_id}
+                    </p>
+                    <p className="pt-8 text-3xl font-semibold text-gray-200">
+                      ₹ {c.revenue}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      }
     }
   };
 
