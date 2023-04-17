@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { sleep } from "../utils/utils";
 import { toastError, toastSuccess } from "../utils/misc";
@@ -43,7 +43,7 @@ const LoginForm = () => {
 
   return (
     <>
-      <div className="box-border min-w-[360px] rounded-2xl  bg-white px-8 py-16 sm:min-w-[440px] sm:px-12 sm:shadow-lg xl:min-w-[480px]">
+      <div className="min-w-[360px] rounded-2xl border border-gray-200  bg-white px-8 py-16 sm:min-w-[440px] sm:px-12 sm:shadow-lg xl:min-w-[480px]">
         <div className="flex flex-col">
           <p className="font-medium text-gray-600">Email address</p>
           <input

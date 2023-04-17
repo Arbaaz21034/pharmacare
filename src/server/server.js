@@ -290,8 +290,6 @@ app.get("/api/trigger/1", (req, res) => {
         UPDATE medicine
         SET m_stock = m_stock - NEW.m_quantity
         WHERE m_id = NEW.m_id;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Medicine stock updated successfully';
-
     END`;
 
   dbConn.query(query, (error, queryResult) => {
@@ -351,8 +349,10 @@ app.get("/api/trigger/2", (req, res) => {
   });
 });
 
-/* Example request: localhost:2003/api/order?order_id=1000&medicine_id=240&medicine_quantity=10000
-
+/*
+  Example request: localhost:2003/api/order?order_id=1000&medicine_id=240&medicine_quantity=10000
+  Example request: localhost:2003/api/order?order_id=3&medicine_id=240&medicine_quantity=5
+  Use this to test trigger 1 & 2
 */
 app.get("/api/order", (req, res) => {
   console.log("[GET] /api/order with data");
@@ -366,7 +366,7 @@ app.get("/api/order", (req, res) => {
   dbConn.query(query, (error, queryResult) => {
     if (error) {
       if (error.sqlState == "45000") {
-        res.send({
+        let responseObj = {
           success: false,
           message: error.message,
           queryData: {
@@ -374,11 +374,21 @@ app.get("/api/order", (req, res) => {
             medicineId,
             medicineQuantity,
           },
-        });
+        };
+        console.log("[TRIGGER] /api/order: " + error.message);
+        res.send(responseObj);
       } else {
-        throw error;
+        console.error(error);
+        res.send({
+          success: false,
+          message: error,
+        });
       }
     } else {
+      console.log(
+        "[TRIGGER] /api/order:  Created requested order and updated medicine stock"
+      );
+
       res.send({
         success: true,
         message: "Created requested order",
