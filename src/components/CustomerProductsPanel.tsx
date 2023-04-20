@@ -11,9 +11,10 @@ import {
 } from "../utils/misc";
 import Product from "../components/Product";
 
-const CustomerProductsPanel = () => {
+const CustomerProductsPanel = (props: any) => {
   const [products, setProducts] = useState([]);
   const [selectValue, setSelectValue] = useState(null);
+  const cart = props.cart;
 
   const selectOptions = [
     { value: "pain-relief", label: "Pain relief" },
@@ -65,7 +66,7 @@ const CustomerProductsPanel = () => {
             products.map((prod: any) => {
               return (
                 <>
-                  <Product product={prod} />
+                  <Product product={prod} cart={cart} />
                 </>
               );
             })}

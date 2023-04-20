@@ -2,7 +2,10 @@ import { useState } from "react";
 
 /* eslint-disable @next/next/no-img-element */
 const Product = (props: any) => {
-  const { product } = props;
+  const { product, cart } = props;
+  const currentCart = cart.cart;
+  const setCart = cart.setCart;
+  const addToCart = cart.addToCart;
   const [quantity, setQuantity] = useState(0);
 
   const modifyQuantity = (operation: 0 | 1) => {

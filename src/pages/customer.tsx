@@ -5,6 +5,11 @@ import Cart from "../components/Cart";
 
 const Customer = () => {
   const [viewMode, setViewMode] = useState("products");
+  const [cart, setCart] = useState<any>([]);
+
+  const addToCart = (product: any) => {
+    setCart([...cart, product]);
+  };
 
   if (viewMode == "products") {
     return (
@@ -13,7 +18,7 @@ const Customer = () => {
           CTA={{ label: "View cart" }}
           view={{ viewMode, setViewMode }}
         />
-        <CustomerProductsPanel />
+        <CustomerProductsPanel cart={{ cart, setCart, addToCart }} />
       </>
     );
   } else if (viewMode == "cart") {
@@ -23,7 +28,7 @@ const Customer = () => {
           CTA={{ label: "Browse products" }}
           view={{ viewMode, setViewMode }}
         />
-        <Cart />
+        <Cart cart={{ cart, setCart, addToCart }} />
       </>
     );
   }

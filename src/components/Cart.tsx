@@ -1,4 +1,5 @@
-const Cart = () => {
+const Cart = (props: any) => {
+  const cart = props.cart;
   return (
     <>
       <div className="mt-12">
