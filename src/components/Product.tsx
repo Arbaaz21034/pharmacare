@@ -11,7 +11,9 @@ const Product = (props: any) => {
         setQuantity(quantity - 1);
       }
     } else if (operation == 1) {
-      setQuantity(quantity + 1);
+      if (quantity < product.m_stock) {
+        setQuantity(quantity + 1);
+      }
     }
   };
 

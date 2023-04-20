@@ -8,7 +8,7 @@ const Document = () => {
         <link rel="icon" href="/favicon.ico" />
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
       </Head>
-      <body className="font-inter bg-white text-black">
+      <body className="bg-slate-50 font-inter text-black">
         <Main />
         <NextScript />
       </body>

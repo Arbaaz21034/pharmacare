@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Dispatch, SetStateAction } from "react";
 
 const CustomerTopPanel = (props: CustomerTopPanelProps) => {
@@ -16,7 +17,9 @@ const CustomerTopPanel = (props: CustomerTopPanelProps) => {
     <>
       <div className="mx-6 flex h-16 flex-row items-center">
         <div className="mr-auto">
-          <h2 className="text-lg font-semibold text-gray-700">Pharmacare</h2>
+          <Link href="/" className="text-lg font-semibold text-gray-700">
+            Pharmacare
+          </Link>
         </div>
         <div className="ml-auto">
           <span
