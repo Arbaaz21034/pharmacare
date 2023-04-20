@@ -35,19 +35,19 @@ const Product = (props: any) => {
               ₹ {product.m_price}
             </p>
             <div className="ml-auto flex flex-col">
-              <div className="text-center text-sm text-gray-400">
+              <div className="text-center font-semibold text-gray-300">
                 {quantity}
               </div>
               <div className="my-2 flex flex-row font-semibold text-gray-300">
                 <button
-                  className="rounded-l-2xl bg-neutral-500 px-3 hover:cursor-pointer"
+                  className="rounded-l-2xl bg-neutral-500 px-3 transition duration-200 ease-out hover:cursor-pointer hover:bg-red-500"
                   onClick={() => modifyQuantity(0)}
                 >
                   -
                 </button>
                 <div className="w-px"></div>
                 <button
-                  className="rounded-r-2xl bg-neutral-600 px-3 hover:cursor-pointer"
+                  className="rounded-r-2xl bg-neutral-600 px-3 transition duration-200 ease-out hover:cursor-pointer hover:bg-green-500 "
                   onClick={() => modifyQuantity(1)}
                 >
                   +
