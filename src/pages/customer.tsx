@@ -54,7 +54,7 @@ const Customer = () => {
 
   return (
     <>
-      <CustomerTopPanel />
+      <CustomerTopPanel CTA={{ link: "/cart", label: "Your cart" }} />
       <div className="mx-8 my-20 flex w-full flex-col items-center justify-center">
         <div className="flex w-100 flex-row items-center justify-center gap-x-8">
           <Select options={selectOptions} onChange={handleSelect} />

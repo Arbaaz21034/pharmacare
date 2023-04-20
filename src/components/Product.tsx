@@ -1,6 +1,19 @@
+import { useState } from "react";
+
 /* eslint-disable @next/next/no-img-element */
 const Product = (props: any) => {
   const { product } = props;
+  const [quantity, setQuantity] = useState(0);
+
+  const modifyQuantity = (operation: 0 | 1) => {
+    if (operation == 0) {
+      if (quantity > 0) {
+        setQuantity(quantity - 1);
+      }
+    } else if (operation == 1) {
+      setQuantity(quantity + 1);
+    }
+  };
 
   return (
     <>
@@ -18,9 +31,29 @@ const Product = (props: any) => {
             {product.m_stock} in stock
           </p>
           <div className="mt-6 flex items-center">
-            <p className="mr-2 text-lg font-semibold text-gray-900 dark:text-zinc-200">
+            <p className="mr-auto text-lg font-semibold text-gray-900 dark:text-zinc-200">
               ₹ {product.m_price}
             </p>
+            <div className="ml-auto flex flex-col">
+              <div className="text-center text-sm text-gray-400">
+                {quantity}
+              </div>
+              <div className="my-2 flex flex-row font-semibold text-gray-300">
+                <button
+                  className="rounded-l-2xl bg-neutral-500 px-3 hover:cursor-pointer"
+                  onClick={() => modifyQuantity(0)}
+                >
+                  -
+                </button>
+                <div className="w-px"></div>
+                <button
+                  className="rounded-r-2xl bg-neutral-600 px-3 hover:cursor-pointer"
+                  onClick={() => modifyQuantity(1)}
+                >
+                  +
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
