@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import Select from "react-select";
 import Button from "../components/Button";
-import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 import {
   medicineImages,
   randint,
@@ -9,6 +10,7 @@ import {
   toastSuccess,
 } from "../utils/misc";
 import Product from "../components/Product";
+import CustomerTopPanel from "../components/CustomerTopPanel";
 
 const Customer = () => {
   const [products, setProducts] = useState([]);
@@ -39,10 +41,10 @@ const Customer = () => {
         });
 
         setProducts(mutatedData);
-        //toastSuccess("Fetched the requested products");
+        toastSuccess("Fetched the requested products");
       })
       .catch((error) => {
-        //toastError(error);
+        toastError(error);
       });
   };
 
@@ -52,6 +54,7 @@ const Customer = () => {
 
   return (
     <>
+      <CustomerTopPanel />
       <div className="mx-8 my-20 flex w-full flex-col items-center justify-center">
         <div className="flex w-100 flex-row items-center justify-center gap-x-8">
           <Select options={selectOptions} onChange={handleSelect} />
@@ -73,10 +76,9 @@ const Customer = () => {
       </div>
       <ToastContainer
         position="bottom-right"
-        autoClose={5000}
-        hideProgressBar
+        autoClose={4000}
         newestOnTop={false}
-        closeOnClick
+        closeButton={false}
         rtl={false}
         pauseOnFocusLoss
         draggable={false}
