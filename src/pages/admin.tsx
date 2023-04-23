@@ -2,6 +2,8 @@ import { useState } from "react";
 import ButtonAlt from "../components/ButtonAlt";
 import { v4 as uuidv4 } from "uuid";
 import Tooltip from "../components/Tooltip";
+import AdminTopPanel from "../components/AdminTopPanel";
+import AdminUpdatePanel from "../components/AdminUpdatePanel";
 
 const Admin = () => {
   const [viewReport, setViewReport] = useState(0);
@@ -132,6 +134,8 @@ const Admin = () => {
 
   return (
     <>
+      <AdminTopPanel />
+      <AdminUpdatePanel />
       <div className="mx-8 my-32 flex w-full flex-col items-center justify-center">
         <div className="min-w-100 flex flex-row items-center justify-center gap-x-10">
           <Tooltip text={reports[0] as string}>
