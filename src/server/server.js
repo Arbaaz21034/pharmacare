@@ -124,6 +124,22 @@ app.get("/api/products/:category", (req, res) => {
   console.log("[GET] /api/products/" + category);
   const categoryName = validCategories[category];
 
+  if (category == "all") {
+    const query = `SELECT * FROM medicine`;
+    dbConn.query(query, (error, queryResult) => {
+      if (error) {
+        throw error;
+      } else {
+        res.send({
+          success: true,
+          message: "Successfully fetched products",
+          products: queryResult,
+        });
+      }
+    });
+    return;
+  }
+
   if (validCategories[category]) {
     const query = `SELECT * FROM medicine WHERE m_category='${categoryName}'`;
 

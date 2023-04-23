@@ -27,41 +27,28 @@ const CustomerProductsPanel = (props: any) => {
     { value: "cold-and-flu", label: "Cold & Flu" },
     { value: "digestive", label: "Digestive" },
   ];
-
-  const fetchProducts = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    e.preventDefault();
-    fetch("http://localhost:2003/api/products/" + selectValue)
+  // fetch all products at page load
+  React.useEffect(() => {
+    fetch("http://localhost:2003/api/products/all")
       .then((res) => res.json())
       .then((data) => {
         const mutatedData = data.products;
+        console.log(mutatedData);
         mutatedData.forEach((prod: any) => {
           prod["image"] = medicineImages[randint(0, medicineImages.length - 1)];
         });
 
         setProducts(mutatedData);
-        toastSuccess("Fetched the requested products");
       })
       .catch((error) => {
         toastError(error);
       });
-  };
+  }, []);
 
-  function handleSelect(selectedOption: any) {
-    setSelectValue(selectedOption.value);
-  }
   return (
     <>
       <div className="mx-8 my-20 flex w-full flex-col items-center justify-center">
-        <div className="flex w-100 flex-row items-center justify-center gap-x-8">
-          <Select options={selectOptions} onChange={handleSelect} />
-          <Button variant="default" size="md" onClick={(e) => fetchProducts(e)}>
-            Fetch medicines
-          </Button>
-        </div>
-
-        <div className="mt-40 grid grid-cols-2 gap-x-16 gap-y-8">
+        <div className="mt-20 grid grid-cols-2 gap-x-16 gap-y-8">
           {products &&
             products.map((prod: any) => {
               return (
