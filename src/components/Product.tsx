@@ -1,26 +1,21 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 /* eslint-disable @next/next/no-img-element */
 const Product = (props: any) => {
   const { product, cart } = props;
-  const currentCart = cart.cart;
   const [quantity, setQuantity] = useState(0);
-
-  useEffect(() => {
-    const productInCart = cart.cart.find((item: any) => item?.id == product.id);
-    if (productInCart) {
-      console.log(productInCart);
-      setQuantity(productInCart.quantity);
-    } else {
-      setQuantity(0);
-    }
-  }, [cart, product]);
 
   const modifyQuantity = (operation: 0 | 1) => {
     if (operation == 0) {
-      cart.removeFromCart(product.m_id);
+      if (quantity > 0) {
+        setQuantity(quantity - 1);
+        cart.removeFromCart(product.m_id);
+      }
     } else if (operation == 1) {
-      cart.addToCart(product.m_id);
+      if (quantity < product.m_stock) {
+        setQuantity(quantity + 1);
+        cart.addToCart(product.m_id);
+      }
     }
   };
 

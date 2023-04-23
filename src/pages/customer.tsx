@@ -9,7 +9,11 @@ const Customer = () => {
 
   const addToCart = (productID: number) => {
     // Check if product is already in cart
-    const productInCart = cart.find((item: any) => item?.id == productID);
+    const productInCart = cart.find((item: any) => {
+      if (item == null) return false;
+      return item.id == productID;
+    });
+    console.log("produtincart ", productInCart);
     if (productInCart) {
       // If product is already in cart, increase quantity by 1
       const newCart = cart.map((item: any) => {
@@ -39,8 +43,10 @@ const Customer = () => {
       }
       return item;
     });
-    if (newCart == null) return;
-    setCart(newCart);
+    if (newCart != null) {
+      setCart(newCart);
+    }
+
     console.log(cart);
   };
 

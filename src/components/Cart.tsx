@@ -1,5 +1,17 @@
+import React from "react";
+
 const Cart = (props: any) => {
   const cart = props.cart;
+  const [products, setProducts] = React.useState<any>([]);
+
+  React.useEffect(() => {
+    fetch("http://localhost:2003/api/products/all")
+      .then((res) => res.json())
+      .then((data) => {
+        const mutatedData = data.products;
+        setProducts(mutatedData);
+      });
+  }, []);
 
   return (
     <>
@@ -10,15 +22,21 @@ const Cart = (props: any) => {
         <div className="mx-8 grid min-h-[720px] grid-cols-8 gap-x-6">
           <div className="col-span-5 rounded-2xl border bg-white shadow-sm">
             <div className="mx-6 mt-8 text-gray-600">
-              {cart.cart.map((item: any) => {
-                if (item.quantity > 0) {
-                  return (
-                    <div key={item.id}>
-                      {item.id} (quantity: {item.quantity})
-                    </div>
-                  );
-                }
-              })}
+              {products.length > 0 &&
+                cart.cart.map((item: any) => {
+                  if (products) {
+                    const itemName = products.find(
+                      (product: any) => product.m_id == item.id
+                    ).m_name;
+                    if (item.quantity > 0) {
+                      return (
+                        <div key={item.id} className="mb-2">
+                          {itemName} (quantity: {item.quantity})
+                        </div>
+                      );
+                    }
+                  }
+                })}
               {cart.cart.length == 0 && (
                 <div className="text-center text-xl">Cart is empty</div>
               )}

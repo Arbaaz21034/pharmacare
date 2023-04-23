@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import Select from "react-select";
-import Button from "../components/Button";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import {
@@ -13,7 +11,6 @@ import Product from "../components/Product";
 
 const CustomerProductsPanel = (props: any) => {
   const [products, setProducts] = useState([]);
-  const [selectValue, setSelectValue] = useState(null);
   const cart = props.cart;
 
   const selectOptions = [
