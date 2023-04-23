@@ -3,6 +3,7 @@ import React from "react";
 const Cart = (props: any) => {
   const cart = props.cart;
   const [products, setProducts] = React.useState<any>([]);
+  const [total, setTotal] = React.useState(0);
 
   React.useEffect(() => {
     fetch("http://localhost:2003/api/products/all")
@@ -10,6 +11,15 @@ const Cart = (props: any) => {
       .then((data) => {
         const mutatedData = data.products;
         setProducts(mutatedData);
+        console.log("setting total", mutatedData);
+        setTotal(
+          cart.cart.reduce((acc: any, item: any) => {
+            const price = mutatedData.find(
+              (product: any) => product.m_id == item.id
+            ).m_price;
+            return acc + price * item.quantity;
+          }, 0)
+        );
       });
   }, []);
 
@@ -44,7 +54,10 @@ const Cart = (props: any) => {
           </div>
           <div className="col-span-3 rounded-2xl border bg-white shadow-sm">
             <div className="mx-6 mt-8">
-              <span className="font-semibold text-gray-700">Order total: </span>
+              <span className="font-semibold text-gray-700">
+                {total == 0 && <span>Order total: $0</span>}
+                {total != 0 && <span>Order total: ${total}</span>}
+              </span>
               <div className="mt-100">
                 <button className="w-full rounded-lg bg-primary-500 py-3 text-white">
                   Checkout
