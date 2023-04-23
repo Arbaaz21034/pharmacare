@@ -2,7 +2,7 @@ const AdminUpdatePanel = () => {
   return (
     <>
       <div className="flex flex-col items-center">
-        <div className="mt-28">
+        <div className="my-28">
           <h3 className="mb-6 text-2xl font-semibold text-gray-700">
             Update Medicine
           </h3>
