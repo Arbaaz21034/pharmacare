@@ -1,7 +1,20 @@
+import { useEffect, useState } from "react";
+
 /* eslint-disable @next/next/no-img-element */
 const Product = (props: any) => {
   const { product, cart } = props;
   const currentCart = cart.cart;
+  const [quantity, setQuantity] = useState(0);
+
+  useEffect(() => {
+    const productInCart = cart.cart.find((item: any) => item?.id == product.id);
+    if (productInCart) {
+      console.log(productInCart);
+      setQuantity(productInCart.quantity);
+    } else {
+      setQuantity(0);
+    }
+  }, [cart, product]);
 
   const modifyQuantity = (operation: 0 | 1) => {
     if (operation == 0) {
@@ -32,7 +45,7 @@ const Product = (props: any) => {
             </p>
             <div className="ml-auto flex flex-col">
               <div className="text-center font-semibold text-gray-300">
-                {currentCart[product.m_id]?.quantity || 0}
+                {quantity}
               </div>
               <div className="my-2 flex flex-row font-semibold text-gray-300">
                 <button
