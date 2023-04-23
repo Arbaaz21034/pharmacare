@@ -23,7 +23,7 @@ const CustomerTopPanel = (props: CustomerTopPanelProps) => {
         </div>
         <div className="ml-auto">
           <span
-            className="text-gray-600 transition duration-300 ease-out hover:text-primary hover:underline"
+            className="text-gray-600 transition duration-300 ease-out hover:cursor-pointer hover:text-primary hover:underline"
             onClick={() => switchView()}
           >
             {CTA.label}

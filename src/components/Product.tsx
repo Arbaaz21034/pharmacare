@@ -1,22 +1,13 @@
-import { useState } from "react";
-
 /* eslint-disable @next/next/no-img-element */
 const Product = (props: any) => {
   const { product, cart } = props;
   const currentCart = cart.cart;
-  const setCart = cart.setCart;
-  const addToCart = cart.addToCart;
-  const [quantity, setQuantity] = useState(0);
 
   const modifyQuantity = (operation: 0 | 1) => {
     if (operation == 0) {
-      if (quantity > 0) {
-        setQuantity(quantity - 1);
-      }
+      cart.removeFromCart(product.m_id);
     } else if (operation == 1) {
-      if (quantity < product.m_stock) {
-        setQuantity(quantity + 1);
-      }
+      cart.addToCart(product.m_id);
     }
   };
 
@@ -41,7 +32,7 @@ const Product = (props: any) => {
             </p>
             <div className="ml-auto flex flex-col">
               <div className="text-center font-semibold text-gray-300">
-                {quantity}
+                {currentCart[product.m_id]?.quantity || 0}
               </div>
               <div className="my-2 flex flex-row font-semibold text-gray-300">
                 <button
