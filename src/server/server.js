@@ -463,10 +463,7 @@ WHERE m_id IN (
               }
               console.log("Transaction 1 completed");
               connection.release();
-              res.send({
-                success: true,
-                message: "Transaction 1 completed",
-              });
+              return resolve("Transaction 1 completed");
             });
           }
         );
@@ -512,10 +509,7 @@ WHERE p_id = ${prescriptionID} and m_id = ${m_id};
               }
               console.log("Transaction 2 completed");
               connection.release();
-              res.send({
-                success: true,
-                message: "Transaction 2 completed",
-              });
+              return resolve("Transaction 2 completed");
             });
           }
         );
@@ -633,7 +627,7 @@ const transaction3 = (prescriptionID, res) => {
                               }
                               console.log("Transaction 3 completed");
                               connection.release();
-                              resolve("Transaction 3 completed");
+                              return resolve("Transaction 3 completed");
                             });
                           }
                         );
@@ -657,7 +651,20 @@ app.get("/api/transaction/1", async (req, res) => {
   const stock_inc = parseFloat(req.query.stock_inc);
   const price_inc = parseFloat(req.query.price_inc);
 
-  transaction1(prescriptionID, stock_inc, price_inc, res);
+  transaction1(prescriptionID, stock_inc, price_inc, res)
+    .then((data) => {
+      console.log(data);
+      res.send({
+        success: true,
+        message: "Transaction 1 completed",
+      });
+    })
+    .catch((err) => {
+      res.send({
+        success: false,
+        message: err,
+      });
+    });
 });
 
 // for demo: http://localhost:2003/api/transaction/2?p_id=1&m_id=244&m_quantity=5
@@ -667,10 +674,24 @@ app.get("/api/transaction/2", async (req, res) => {
   const m_id = parseInt(req.query.m_id);
   const m_quantity = parseInt(req.query.m_quantity);
 
-  transaction2(prescriptionID, m_id, m_quantity, res);
+  transaction2(prescriptionID, m_id, m_quantity, res)
+    .then((data) => {
+      console.log(data);
+      res.send({
+        success: true,
+        message: "Transaction 2 completed",
+      });
+    })
+    .catch((err) => {
+      res.send({
+        success: false,
+        message: err,
+      });
+    });
 });
 
 // for demo: http://localhost:2003/api/transaction/3?p_id=1
+// for demo: http://localhost:2003/api/transaction/3?p_id=4
 app.get("/api/transaction/3", async (req, res) => {
   console.log("[GET] /api/transaction/3");
   const prescriptionID = parseInt(req.query.p_id);
