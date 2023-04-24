@@ -7,20 +7,20 @@ const AdminUpdatePanel = () => {
             Update Medicine
           </h3>
           <div className="h-px w-full bg-gray-300"></div>
-          <div className="mt-12 w-100">
+          <div className="mt-8 w-100">
             <div className="mt-8">
-              <label htmlFor="m_id" className="ml-1 text-sm text-gray-600">
-                Medicine ID
+              <label htmlFor="p_id" className="ml-1 text-sm text-gray-600">
+                Prescription ID
               </label>
               <input
-                id="m_id"
+                id="p_id"
                 type="text"
                 className="h-12 w-full rounded-lg border px-4"
               />
             </div>
             <div className="mt-8">
               <label htmlFor="m_id" className="ml-1 text-sm text-gray-600">
-                Medicine Stock
+                Increase Medicine Stock by
               </label>
               <input
                 id="m_stock"
@@ -30,7 +30,7 @@ const AdminUpdatePanel = () => {
             </div>
             <div className="mt-8">
               <label htmlFor="m_id" className="ml-1 text-sm text-gray-600">
-                Medicine Price
+                % Increase in Medicine Price
               </label>
               <input
                 id="m_price"
