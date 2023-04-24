@@ -426,7 +426,7 @@ app.get("/api/order", (req, res) => {
 ///////////////////////////
 // for demo: http://localhost:2003/api/transaction/1?p_id=1&stock_inc=100&price_inc=5
 
-const transaction1 = (prescriptionID, stock_inc, price_inc) => {
+const transaction1 = (prescriptionID, stock_inc, price_inc, res) => {
   return new Promise((resolve, reject) => {
     pool.getConnection((err, connection) => {
       if (err) {
@@ -440,7 +440,7 @@ const transaction1 = (prescriptionID, stock_inc, price_inc) => {
         return connection.execute(
           `
           UPDATE medicine
-SET m_stock = m_stock + ${stock_inc}, m_price = m_price * (100 + ${price_inc}) / 100))
+SET m_stock = m_stock + ${stock_inc}, m_price = m_price * (100 + ${price_inc}) / 100
 WHERE m_id IN (
   SELECT m_id
   FROM prescribed_medicines
@@ -448,6 +448,7 @@ WHERE m_id IN (
 );
 `,
           (err) => {
+            console.log(err);
             if (err) {
               return connection.rollback(() => {
                 connection.release();
@@ -461,8 +462,12 @@ WHERE m_id IN (
                   return reject("Transaction commit failed");
                 });
               }
-              console.log("conn release");
+              console.log("Transaction 1 completed");
               connection.release();
+              res.send({
+                success: true,
+                message: "Transaction 1 completed",
+              });
             });
           }
         );
@@ -477,48 +482,7 @@ app.get("/api/transaction/1", async (req, res) => {
   const stock_inc = parseFloat(req.query.stock_inc);
   const price_inc = parseFloat(req.query.price_inc);
 
-  try {
-    const tr = await transaction1(prescriptionID, stock_inc, price_inc);
-    res.send({
-      success: true,
-      message: "Transaction 1 completed",
-      transaction: tr,
-    });
-  } catch (err) {
-    console.log(err);
-    res.send({
-      success: false,
-      message: "Transaction 1 failed",
-    });
-  }
-
-  // const conn = await pool.getConnection(); // Get a connection from the pool
-  // if (!conn) {
-  //   console.log("no conn");
-  // }
-
-  // try {
-  //   await conn.beginTransaction(); // Start the transaction
-  //   const query = `
-  //     UPDATE medicine
-  //     SET m_stock = m_stock + ${stock_inc}, m_price = m_price * ((100 + ${price_inc})/100)
-  //     WHERE m_id IN (
-  //       SELECT m_id
-  //       FROM prescribed_medicines
-  //       WHERE p_id = ${prescriptionID}
-  //     )
-  //   `;
-  //   const params = [stock_inc, price_inc, prescriptionID];
-  //   const [result] = await conn.query(query, params); // Execute the query
-
-  //   await conn.commit(); // Commit the transaction
-  //   return result;
-  // } catch (err) {
-  //   await conn.rollback(); // Roll back the transaction in case of error
-  //   throw err;
-  // } finally {
-  //   conn.release(); // Release the connection back to the pool
-  // }
+  transaction1(prescriptionID, stock_inc, price_inc, res);
 });
 
 app.listen(PORT, () => {
