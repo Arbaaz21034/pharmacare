@@ -424,7 +424,6 @@ app.get("/api/order", (req, res) => {
 ///////////////////////////
 ///////////////////////////
 ///////////////////////////
-// for demo: http://localhost:2003/api/transaction/1?p_id=1&stock_inc=100&price_inc=5
 
 const transaction1 = (prescriptionID, stock_inc, price_inc, res) => {
   return new Promise((resolve, reject) => {
@@ -476,6 +475,56 @@ WHERE m_id IN (
   });
 };
 
+const transaction2 = (prescriptionID, m_id, m_quantity, res) => {
+  return new Promise((resolve, reject) => {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        return reject("Error occurred while getting the connection");
+      }
+      return connection.beginTransaction((err) => {
+        if (err) {
+          connection.release();
+          return reject("Error occurred while creating the transaction");
+        }
+        return connection.execute(
+          `
+UPDATE prescribed_medicines
+SET m_quantity = ${m_quantity}
+WHERE p_id = ${prescriptionID} and m_id = ${m_id};
+`,
+          (err) => {
+            console.log(err);
+            if (err) {
+              return connection.rollback(() => {
+                connection.release();
+                return reject(
+                  "UPDATING prescribed_medicines table failed",
+                  err
+                );
+              });
+            }
+            return connection.commit((err) => {
+              if (err) {
+                return connection.rollback(() => {
+                  connection.release();
+                  return reject("Transaction commit failed");
+                });
+              }
+              console.log("Transaction 2 completed");
+              connection.release();
+              res.send({
+                success: true,
+                message: "Transaction 2 completed",
+              });
+            });
+          }
+        );
+      });
+    });
+  });
+};
+
+// for demo: http://localhost:2003/api/transaction/1?p_id=1&stock_inc=100&price_inc=5
 app.get("/api/transaction/1", async (req, res) => {
   console.log("[GET] /api/transaction/1");
   const prescriptionID = parseInt(req.query.p_id);
@@ -483,6 +532,16 @@ app.get("/api/transaction/1", async (req, res) => {
   const price_inc = parseFloat(req.query.price_inc);
 
   transaction1(prescriptionID, stock_inc, price_inc, res);
+});
+
+// for demo: http://localhost:2003/api/transaction/2?p_id=1&m_id=244&m_quantity=5
+app.get("/api/transaction/2", async (req, res) => {
+  console.log("[GET] /api/transaction/2");
+  const prescriptionID = parseInt(req.query.p_id);
+  const m_id = parseInt(req.query.m_id);
+  const m_quantity = parseInt(req.query.m_quantity);
+
+  transaction2(prescriptionID, m_id, m_quantity, res);
 });
 
 app.listen(PORT, () => {
