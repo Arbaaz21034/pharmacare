@@ -523,6 +523,132 @@ WHERE p_id = ${prescriptionID} and m_id = ${m_id};
     });
   });
 };
+const transaction3 = (prescriptionID, res) => {
+  return new Promise((resolve, reject) => {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        return reject("Error occurred while getting the connection");
+      }
+      return connection.beginTransaction((err) => {
+        if (err) {
+          connection.release();
+          return reject("Error occurred while creating the transaction");
+        }
+        return connection.execute(
+          `
+            INSERT INTO order_detail (o_total, o_address, o_date)
+            VALUES (0, '<order_address>', NOW());
+          `,
+          (err) => {
+            console.log(err);
+            if (err) {
+              return connection.rollback(() => {
+                connection.release();
+                return reject("UPDATING order_detail table failed", err);
+              });
+            }
+
+            return connection.execute(
+              `
+                SET @order_id = LAST_INSERT_ID();
+              `,
+              (err) => {
+                console.log(err);
+                if (err) {
+                  return connection.rollback(() => {
+                    connection.release();
+                    return reject("SETTING @order_id failed", err);
+                  });
+                }
+
+                return connection.execute(
+                  `
+                INSERT INTO ordered_medicines (o_id, m_id, m_quantity)
+                SELECT @order_id, pm.m_id, pm.m_quantity
+                FROM prescribed_medicines pm
+                WHERE pm.p_id = ${prescriptionID};
+                  `,
+                  (err) => {
+                    console.log(err);
+                    if (err) {
+                      return connection.rollback(() => {
+                        connection.release();
+                        return reject(
+                          "UPDATING ordered_medicine table failed",
+                          err
+                        );
+                      });
+                    }
+
+                    return connection.execute(
+                      `
+                    UPDATE medicine m
+                    INNER JOIN prescribed_medicines pm ON m.m_id = pm.m_id
+                    SET m.m_stock = m.m_stock - pm.m_quantity
+                    WHERE pm.p_id = ${prescriptionID};
+                      `,
+                      (err) => {
+                        console.log(err);
+                        if (err) {
+                          return connection.rollback(() => {
+                            connection.release();
+                            return reject(
+                              "UPDATING medicine table failed",
+                              err
+                            );
+                          });
+                        }
+
+                        return connection.execute(
+                          `
+                            UPDATE order_detail
+                            SET o_total = (
+                              SELECT SUM(m.m_price * pm.m_quantity)
+                              FROM prescribed_medicines pm
+                              INNER JOIN medicine m ON pm.m_id = m.m_id
+                              WHERE pm.p_id = ${prescriptionID}
+                            )
+                            WHERE o_id = @order_id;
+                          `,
+                          (err) => {
+                            console.log(err);
+                            if (err) {
+                              return connection.rollback(() => {
+                                connection.release();
+                                return reject(
+                                  "UPDATING order_detail table failed",
+                                  err
+                                );
+                              });
+                            }
+
+                            return connection.commit((err) => {
+                              if (err) {
+                                return connection.rollback(() => {
+                                  connection.release();
+                                  return reject(
+                                    "Error occurred while committing the transaction"
+                                  );
+                                });
+                              }
+                              console.log("Transaction 3 completed");
+                              connection.release();
+                              resolve("Transaction 3 completed");
+                            });
+                          }
+                        );
+                      }
+                    );
+                  }
+                );
+              }
+            );
+          }
+        );
+      });
+    });
+  });
+};
 
 // for demo: http://localhost:2003/api/transaction/1?p_id=1&stock_inc=100&price_inc=5
 app.get("/api/transaction/1", async (req, res) => {
@@ -549,7 +675,20 @@ app.get("/api/transaction/3", async (req, res) => {
   console.log("[GET] /api/transaction/3");
   const prescriptionID = parseInt(req.query.p_id);
 
-  transaction3(prescriptionID, res);
+  transaction3(prescriptionID, res)
+    .then((data) => {
+      console.log(data);
+      res.send({
+        success: true,
+        message: "Transaction 3 completed",
+      });
+    })
+    .catch((err) => {
+      res.send({
+        success: false,
+        message: err,
+      });
+    });
 });
 
 app.listen(PORT, () => {
