@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 /* eslint-disable @next/next/no-img-element */
 const Product = (props: any) => {
@@ -18,6 +18,23 @@ const Product = (props: any) => {
       }
     }
   };
+
+  useEffect(() => {
+    let foundProductInCart = false;
+    let index = 0;
+
+    cart.cart.map((item: any) => {
+      if (item.id == product.m_id) {
+        foundProductInCart = true;
+        index = cart.cart.indexOf(item);
+      }
+    });
+
+    if (foundProductInCart) {
+      console.log(product.m_);
+      setQuantity(cart.cart[index].quantity);
+    }
+  }, []);
 
   return (
     <>

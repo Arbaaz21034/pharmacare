@@ -5,7 +5,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 
 const PORT = process.env.PORT || 2003;
-const app = express(2003);
+const app = express(PORT);
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -542,6 +542,14 @@ app.get("/api/transaction/2", async (req, res) => {
   const m_quantity = parseInt(req.query.m_quantity);
 
   transaction2(prescriptionID, m_id, m_quantity, res);
+});
+
+// for demo: http://localhost:2003/api/transaction/3?p_id=1
+app.get("/api/transaction/3", async (req, res) => {
+  console.log("[GET] /api/transaction/3");
+  const prescriptionID = parseInt(req.query.p_id);
+
+  transaction3(prescriptionID, res);
 });
 
 app.listen(PORT, () => {
