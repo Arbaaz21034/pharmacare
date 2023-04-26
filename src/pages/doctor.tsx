@@ -22,6 +22,11 @@ const Doctor = () => {
       return;
     }
 
+    if (parseInt(pid) < 0 || isNaN(parseInt(pid))) {
+      toastError("Please enter a valid prescription ID");
+      return;
+    }
+
     if (parseInt(mid) < 0 || isNaN(parseInt(mid))) {
       toastError("Please enter a valid medicine ID");
       return;

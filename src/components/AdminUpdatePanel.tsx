@@ -21,6 +21,21 @@ const AdminUpdatePanel = () => {
       return;
     }
 
+    if (parseInt(pid) < 0 || isNaN(parseInt(pid))) {
+      toastError("Please enter a valid prescription ID");
+      return;
+    }
+
+    if (parseInt(mstock) < 0 || isNaN(parseInt(mstock))) {
+      toastError("Please enter a valid medicine stock");
+      return;
+    }
+
+    if (isNaN(parseInt(mprice))) {
+      toastError("Please enter a valid medicine price");
+      return;
+    }
+
     const params = new URLSearchParams();
     params.set("p_id", pid);
     params.set("stock_inc", mstock);
@@ -93,7 +108,7 @@ const AdminUpdatePanel = () => {
                 type="text"
                 className="h-12 w-full rounded-lg border px-4"
                 onChange={(event) => setMprice(event.target.value)}
-                placeholder="5%"
+                placeholder="5"
                 ref={mpriceRef}
               />
             </div>
