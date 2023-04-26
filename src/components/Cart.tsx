@@ -1,4 +1,7 @@
 import React from "react";
+import "react-toastify/dist/ReactToastify.css";
+import { toastError, toastSuccess } from "../utils/misc";
+import { ToastContainer } from "react-toastify";
 
 const Cart = (props: any) => {
   const cart = props.cart;
@@ -22,6 +25,18 @@ const Cart = (props: any) => {
         );
       });
   }, []);
+
+  const checkout = async (e: any) => {
+    e.preventDefault();
+    if (cart.cart.length == 0) {
+      toastError("Cart is empty");
+      return;
+    }
+
+    toastSuccess("Checkout successful");
+    await new Promise((resolve) => setTimeout(resolve, 2500));
+    window.location.href = "/purchased";
+  };
 
   return (
     <>
@@ -59,7 +74,10 @@ const Cart = (props: any) => {
                 {total != 0 && <span>Order total: ${total}</span>}
               </span>
               <div className="mt-100">
-                <button className="w-full rounded-lg bg-primary-500 py-3 text-white">
+                <button
+                  className="w-full rounded-lg bg-primary-500 py-3 text-white transition delay-200 duration-300 ease-in-out hover:bg-primary-400 active:scale-95"
+                  onClick={(e) => checkout(e)}
+                >
                   Checkout
                 </button>
               </div>
@@ -67,6 +85,18 @@ const Cart = (props: any) => {
           </div>
         </div>
       </div>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable={false}
+        pauseOnHover
+        theme="light"
+      />
     </>
   );
 };

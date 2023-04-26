@@ -22,8 +22,8 @@ const PrescriptionCard = (props: any) => {
 
     if (data.success == true) {
       toastSuccess("Prescription bought");
-      await new Promise((resolve) => setTimeout(resolve, 4000));
-      window.location.href = "/customer";
+      await new Promise((resolve) => setTimeout(resolve, 2500));
+      window.location.href = "/purchased";
     } else {
       toastError(data.message);
     }
