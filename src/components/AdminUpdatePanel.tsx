@@ -35,6 +35,10 @@ const AdminUpdatePanel = () => {
     } else {
       toastError(data.message);
     }
+
+    setPid("");
+    setMstock("");
+    setMprice("");
   };
 
   return (
