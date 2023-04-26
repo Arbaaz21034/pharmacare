@@ -30,6 +30,49 @@ dbConn.connect((error) => {
   console.info(`[+] Connected to database ${myDatabase.database}`);
 });
 
+app.get("/api/prescription", (req, res) => {
+  console.log("[POST] /api/prescription");
+  const u_id = parseInt(req.query.u_id);
+
+  const query = `SELECT * FROM prescription as p JOIN prescribed_medicines as pm WHERE p.cus_id = ${u_id} and p.p_id = pm.p_id;`;
+  dbConn.query(query, (error, queryResult) => {
+    if (error) {
+      throw error;
+    }
+    // get the medicines
+    const medicinesInPrescription = queryResult.map((prescription) => {
+      return {
+        m_id: prescription.m_id,
+      };
+    });
+
+    const medicineQuery = `SELECT * FROM medicine WHERE m_id IN (${medicinesInPrescription
+      .map((medicine) => medicine.m_id)
+      .join(",")})`;
+
+    dbConn.query(medicineQuery, (error, medicineQueryResult) => {
+      if (error) {
+        throw error;
+      }
+
+      const medicines = medicineQueryResult.map((medicine) => {
+        return {
+          m_id: medicine.m_id,
+          m_name: medicine.m_name,
+          m_category: medicine.m_category,
+          m_price: medicine.m_price,
+          m_quantity: queryResult.m_quantity,
+        };
+      });
+      res.send({
+        success: true,
+        message: "Successfully fetched prescription with medicines",
+        data: medicines,
+      });
+    });
+  });
+});
+
 // embedded query 1
 app.post("/api/login", (req, res) => {
   console.log("[POST] /api/login");
@@ -67,10 +110,14 @@ app.post("/api/login", (req, res) => {
                 throw error;
               } else if (customerQueryResult.length === 1) {
                 // user is a customer
+                console.log("[!] Customer login");
+                // unsafe code made for demo purposes, do not use in production
                 res.send({
                   success: true,
                   message: "Successfully logged in as Customer",
                   loginAs: "customer",
+                  userId: userId,
+                  userName: user.u_name,
                 });
               } else {
                 // user is neither admin nor customer. huh?

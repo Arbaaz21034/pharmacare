@@ -4,6 +4,10 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { sleep } from "../utils/utils";
 import { toastError, toastSuccess } from "../utils/misc";
+import Cookies from "universal-cookie";
+
+// unsafe implementation of login
+// do not use this in production
 
 const LoginForm = () => {
   const router = useRouter();
@@ -26,6 +30,10 @@ const LoginForm = () => {
         toastError(data.message);
       } else if (data.success) {
         toastSuccess(data.message);
+        const cookies = new Cookies();
+        cookies.set("userName", data.userName);
+        cookies.set("userId", data.userId);
+
         sleep(2000).then(() => {
           if (data.loginAs == "admin") {
             router.push("/admin");
