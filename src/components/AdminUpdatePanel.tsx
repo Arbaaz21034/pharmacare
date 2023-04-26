@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { toastError, toastSuccess } from "../utils/misc";
@@ -7,6 +7,10 @@ const AdminUpdatePanel = () => {
   const [pid, setPid] = useState("");
   const [mstock, setMstock] = useState("");
   const [mprice, setMprice] = useState("");
+
+  const pidRef = useRef<HTMLInputElement>(null);
+  const mstockRef = useRef<HTMLInputElement>(null);
+  const mpriceRef = useRef<HTMLInputElement>(null);
 
   const updateEvent = async (e: any) => {
     console.log("Run updateEvent");
@@ -39,6 +43,10 @@ const AdminUpdatePanel = () => {
     setPid("");
     setMstock("");
     setMprice("");
+
+    if (pidRef.current) pidRef.current.value = "";
+    if (mstockRef.current) mstockRef.current.value = "";
+    if (mpriceRef.current) mpriceRef.current.value = "";
   };
 
   return (
@@ -60,6 +68,7 @@ const AdminUpdatePanel = () => {
                 className="h-12 w-full rounded-lg border px-4"
                 onChange={(event) => setPid(event.target.value)}
                 placeholder="1"
+                ref={pidRef}
               />
             </div>
             <div className="mt-8">
@@ -72,6 +81,7 @@ const AdminUpdatePanel = () => {
                 className="h-12 w-full rounded-lg border px-4"
                 onChange={(event) => setMstock(event.target.value)}
                 placeholder="25"
+                ref={mstockRef}
               />
             </div>
             <div className="mt-8">
@@ -84,6 +94,7 @@ const AdminUpdatePanel = () => {
                 className="h-12 w-full rounded-lg border px-4"
                 onChange={(event) => setMprice(event.target.value)}
                 placeholder="5%"
+                ref={mpriceRef}
               />
             </div>
             <div>

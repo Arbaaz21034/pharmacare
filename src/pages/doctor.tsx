@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import DoctorTopPanel from "../components/DoctorTopPanel";
 import "react-toastify/dist/ReactToastify.css";
 import { toastError, toastSuccess } from "../utils/misc";
@@ -8,6 +8,10 @@ const Doctor = () => {
   const [pid, setPid] = useState("");
   const [mid, setMid] = useState("");
   const [medQuantity, setMedQuantity] = useState("");
+
+  const pidRef = useRef<HTMLInputElement>(null);
+  const midRef = useRef<HTMLInputElement>(null);
+  const medQuantityRef = useRef<HTMLInputElement>(null);
 
   const updateEvent = async (e: any) => {
     console.log("Run updateEvent");
@@ -44,6 +48,14 @@ const Doctor = () => {
     } else {
       toastError(data.message);
     }
+
+    setPid("");
+    setMid("");
+    setMedQuantity("");
+
+    if (pidRef.current) pidRef.current.value = "";
+    if (midRef.current) midRef.current.value = "";
+    if (medQuantityRef.current) medQuantityRef.current.value = "";
   };
 
   return (
@@ -66,6 +78,7 @@ const Doctor = () => {
                 className="h-12 w-full rounded-lg border px-4"
                 onChange={(event) => setPid(event.target.value)}
                 placeholder="1"
+                ref={pidRef}
               />
             </div>
             <div className="mt-8">
@@ -78,6 +91,7 @@ const Doctor = () => {
                 className="h-12 w-full rounded-lg border px-4"
                 onChange={(event) => setMid(event.target.value)}
                 placeholder="244"
+                ref={midRef}
               />
             </div>
             <div className="mt-8">
@@ -90,6 +104,7 @@ const Doctor = () => {
                 className="h-12 w-full rounded-lg border px-4"
                 onChange={(event) => setMedQuantity(event.target.value)}
                 placeholder="5"
+                ref={medQuantityRef}
               />
             </div>
             <div>
