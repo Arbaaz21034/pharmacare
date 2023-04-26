@@ -2,6 +2,7 @@ import CustomerTopPanel from "../components/CustomerTopPanel";
 import CustomerProductsPanel from "../components/CustomerProductsPanel";
 import { useState } from "react";
 import Cart from "../components/Cart";
+import Link from "next/link";
 
 const Customer = () => {
   const [viewMode, setViewMode] = useState("products");
@@ -60,6 +61,13 @@ const Customer = () => {
         <CustomerProductsPanel
           cart={{ cart, setCart, addToCart, removeFromCart }}
         />
+        <div className="fixed bottom-0 left-0 p-4">
+          <Link href="/prescriptions">
+            <button className="mt-8 h-12 w-40 rounded-md bg-primary-500 text-sm text-white hover:cursor-pointer hover:bg-primary-400">
+              View prescriptions
+            </button>
+          </Link>
+        </div>
       </>
     );
   } else if (viewMode == "cart") {
