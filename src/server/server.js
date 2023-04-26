@@ -43,6 +43,7 @@ app.get("/api/prescription", (req, res) => {
     const medicinesInPrescription = queryResult.map((prescription) => {
       return {
         m_id: prescription.m_id,
+        m_quantity: prescription.m_quantity,
       };
     });
 
@@ -55,19 +56,23 @@ app.get("/api/prescription", (req, res) => {
         throw error;
       }
 
+      let counter = 0;
       const medicines = medicineQueryResult.map((medicine) => {
+        const m_quantity = medicinesInPrescription[counter].m_quantity;
+        counter++;
         return {
           m_id: medicine.m_id,
           m_name: medicine.m_name,
           m_category: medicine.m_category,
           m_price: medicine.m_price,
-          m_quantity: queryResult.m_quantity,
+          m_quantity: m_quantity,
         };
       });
       res.send({
         success: true,
         message: "Successfully fetched prescription with medicines",
         data: medicines,
+        p_id: queryResult[0].p_id,
       });
     });
   });

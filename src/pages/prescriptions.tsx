@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import PrescriptionsTopPanel from "../components/PrescriptionsTopPanel";
 import Cookies from "universal-cookie";
 import { LoadingAnimatedIcon } from "../utils/icons";
+import PrescriptionCard from "../components/PrescriptionCard";
 
 // NOTE: This code is super unsafe and only meant for demo purposes
 // please do not use this in production ever.
@@ -11,6 +12,7 @@ const Prescription = () => {
   const [userId, setUserId] = useState("");
   const [prescriptions, setPrescriptions] = useState<any>([]);
   const [fetchPrescriptions, setFetchPrescriptions] = useState(false);
+  const [pid, setPid] = useState(0);
 
   useEffect(() => {
     const cookies = new Cookies();
@@ -39,7 +41,9 @@ const Prescription = () => {
       if (data.success == true) {
         setPrescriptions(data.data);
         setFetchPrescriptions(true);
-        console.log(data);
+        setPid(data.p_id);
+
+        console.log(data.data);
       }
     };
 
@@ -61,9 +65,9 @@ const Prescription = () => {
             <LoadingAnimatedIcon className={"h-16 w-16 stroke-primary"} />
           )}
           {fetchPrescriptions && prescriptions.length > 0 && (
-            <>
-              <div></div>
-            </>
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              <PrescriptionCard prescription={prescriptions} pid={pid} />
+            </div>
           )}
         </div>
       </div>
