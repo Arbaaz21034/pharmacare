@@ -17,7 +17,7 @@ const LoginForm = () => {
   const login = async (e: any) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:2003/api/login", {
+      const response = await fetch(process.env.SERVER_URL + "/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
