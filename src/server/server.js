@@ -1,8 +1,8 @@
 const express = require("express");
 const mysql = require("mysql2");
-const mysqlPromise = require("mysql2/promise");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+require("dotenv").config();
 
 const PORT = process.env.PORT || 2003;
 const app = express(PORT);
@@ -11,15 +11,15 @@ app.use(cors());
 app.use(bodyParser.json());
 
 myDatabase = {
-  host: "localhost",
-  user: "root",
-  database: "pharmacare",
-  password: "12345678", // hardcoding it here instead of using a .env because I really don't care about security for this thing
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PWD,
 };
 
-const dbConn = mysql.createConnection(myDatabase);
+const dbConn = mysql.createConnection(process.env.DATABASE_URL);
 
-const pool = mysql.createPool(myDatabase);
+const pool = mysql.createPool(process.env.DATABASE_URL);
 
 dbConn.connect((error) => {
   if (error) {
