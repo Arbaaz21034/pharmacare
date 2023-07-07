@@ -4,6 +4,9 @@ import { useState } from "react";
 import Cart from "../components/Cart";
 import Link from "next/link";
 
+// DEV NOTE: In case you want to refactor this code in the future,
+// start by using the context api in the future. I really messed up by not using it.
+
 const Customer = () => {
   const [viewMode, setViewMode] = useState("products");
   const [cart, setCart] = useState<any>([]);

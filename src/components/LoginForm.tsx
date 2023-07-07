@@ -60,6 +60,7 @@ const LoginForm = () => {
             required
             autoComplete="on"
             onChange={(event) => setEmail(event.target.value)}
+            placeholder="arbaaz.choudhari@gmail.com"
           />
         </div>
         <div className="mt-8 flex flex-col">
@@ -69,6 +70,7 @@ const LoginForm = () => {
             className="mt-3 h-10 rounded-lg border border-gray-300 px-2 text-gray-700 focus:outline-primary"
             required
             onChange={(event) => setPassword(event.target.value)}
+            placeholder="12345678"
           />
         </div>
         <div className="mt-8 h-12 w-full">
