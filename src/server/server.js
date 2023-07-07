@@ -30,6 +30,10 @@ dbConn.connect((error) => {
   console.info(`[+] Connected to database ${myDatabase.database}`);
 });
 
+app.get("/", (req, res) => {
+  res.send("Access not allowed to this page.");
+});
+
 app.get("/api/prescription", (req, res) => {
   console.log("[POST] /api/prescription");
   const u_id = parseInt(req.query.u_id);
