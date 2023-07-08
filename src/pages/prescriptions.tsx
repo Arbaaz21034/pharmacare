@@ -25,7 +25,8 @@ const Prescription = () => {
     console.log(userId);
 
     const getUser = async () => {
-      const res = await fetch("http://localhost:2003/api/user");
+      const url = process.env.NEXT_PUBLIC_SERVER_URL + "/api/user";
+      const res = await fetch(url);
       const data = await res.json();
       console.log(data);
     };
@@ -34,7 +35,9 @@ const Prescription = () => {
       console.log("Attempt fetching prescriptions");
       const params = new URLSearchParams();
       params.set("u_id", cookies.get("userId"));
-      const url = `http://localhost:2003/api/prescription?${params.toString()}`;
+      const url =
+        process.env.NEXT_PUBLIC_SERVER_URL +
+        `/api/prescription?${params.toString()}`;
       console.log(url);
       const res = await fetch(url);
       const data = await res.json();

@@ -26,7 +26,8 @@ const CustomerProductsPanel = (props: any) => {
   ];
   // fetch all products at page load
   React.useEffect(() => {
-    fetch("http://localhost:2003/api/products/all")
+    const url = process.env.NEXT_PUBLIC_SERVER_URL + "/api/products/all";
+    fetch(url)
       .then((res) => res.json())
       .then((data) => {
         const mutatedData = data.products;

@@ -42,8 +42,10 @@ const AdminUpdatePanel = () => {
     params.set("price_inc", mprice);
 
     // http://localhost:2003/api/transaction/2?p_id=1&m_id=244&m_quantity=5
+    const url =
+      process.env.NEXT_PUBLIC_SERVER_URL +
+      `/api/transaction/1?${params.toString()}`;
 
-    const url = `http://localhost:2003/api/transaction/1?${params.toString()}`;
     console.log(url);
     const res = await fetch(url);
     const data = await res.json();

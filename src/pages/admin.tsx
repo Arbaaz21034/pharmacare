@@ -17,7 +17,8 @@ const Admin = () => {
 
   const report = async (id: number) => {
     setViewReport(id);
-    const response = await fetch("http://localhost:2003/api/report/" + id);
+    const url = process.env.NEXT_PUBLIC_SERVER_URL + "/api/report/" + id;
+    const response = await fetch(url);
     const fetchData = await response.json();
     console.log(fetchData);
     setData(fetchData.data);

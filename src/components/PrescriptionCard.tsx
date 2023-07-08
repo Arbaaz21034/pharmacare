@@ -13,7 +13,9 @@ const PrescriptionCard = (props: any) => {
 
     const params = new URLSearchParams();
     params.set("p_id", pid);
-    const url = `http://localhost:2003/api/transaction/3?${params.toString()}`;
+    const url =
+      process.env.NEXT_PUBLIC_SERVER_URL +
+      `/api/transaction/3?${params.toString()}`;
     console.log(url);
 
     const res = await fetch(url);

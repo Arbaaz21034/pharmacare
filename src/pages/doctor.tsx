@@ -42,8 +42,9 @@ const Doctor = () => {
     params.set("m_id", mid);
     params.set("m_quantity", medQuantity);
 
-    const url = `http://localhost:2003/api/transaction/2?${params.toString()}`;
-    console.log(url);
+    const url =
+      process.env.NEXT_PUBLIC_SERVER_URL +
+      `/api/transaction/2${params.toString()}`;
     const res = await fetch(url);
     const data = await res.json();
     console.log(data);
